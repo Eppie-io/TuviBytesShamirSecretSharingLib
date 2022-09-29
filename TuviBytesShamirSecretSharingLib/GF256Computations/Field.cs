@@ -10,8 +10,8 @@ namespace GF256Computations
         public const int order = 256;
         //irreducible polynomial used : x^8 + x^4 + x^3 + x + 1 (0x11B)
         public const int polynomial = 0x11B;
-        //generator to be used in Exp & Log table generation (a primitive element of this finite field: x (0x2))
-        public const byte generator = 0x2;
+        //generator to be used in Exp & Log table generation (a primitive element of this finite field: x + 1 (0x3))
+        public const byte generator = 0x3;
         protected readonly static byte[] Exp = new byte[order];
         protected readonly static byte[] Log = new byte[order];
 
