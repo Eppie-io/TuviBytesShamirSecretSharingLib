@@ -38,17 +38,17 @@ namespace GF256Computations
                 {
                     Log[val] = (byte)i;
                 }
-                val = multiply(generator, val);
+                val = Multiply(generator, val);
             }
         }
 
         //getters and setters
-        public byte getValue()
+        public byte GetValue()
         {
             return value;
         }
 
-        public void setValue(byte _value)
+        public void SetValue(byte _value)
         {
             value = _value;
         }
@@ -155,7 +155,7 @@ namespace GF256Computations
 
         //multiplication method which is only used in Exp & Log table generation
         //implemented with Russian Peasant Multiplication algorithm
-        private static byte multiply(byte a, byte b)
+        private static byte Multiply(byte a, byte b)
         {
             byte result = 0;
             byte aa = a;
