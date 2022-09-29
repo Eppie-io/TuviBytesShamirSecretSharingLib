@@ -108,5 +108,16 @@ namespace TuviBytesShamirSecretSharingLib
         {
             return Interpolation(new Field(255), secretShares).GetValue();
         }
+
+        public byte RecoverSecret((byte, byte)[] secretShares)
+        {
+            Point[] points = new Point[secretShares.Length];
+            for(byte i = 0; i < points.Length; i++)
+            {
+                points[i] = new Point(secretShares[i].Item1, secretShares[i].Item2);
+            }
+
+            return Interpolation(new Field(255), points).GetValue();
+        }
     }
 }
