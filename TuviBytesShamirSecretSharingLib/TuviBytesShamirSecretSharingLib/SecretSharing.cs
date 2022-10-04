@@ -23,7 +23,7 @@ namespace TuviBytesShamirSecretSharingLib
     /// <summary>
     /// Class realizes calculations used for Shamir's Secret Sharing algorithm. Based on SLIP-39 https://github.com/satoshilabs/slips/blob/master/slip-0039.md
     /// </summary>
-    public class SecretSharing
+    public static class SecretSharing
     {
         private const byte MaxAmountOfShares = 16;
 
@@ -33,7 +33,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// <param name="x">x coordinate as value over GF(256).</param>
         /// <param name="points">Known points.</param>
         /// <returns>f(x).</returns>
-        public Field Interpolation(Field x, Point[] points)
+        public static Field Interpolation(Field x, Point[] points)
         {
             Field result = new Field(0);
             for (int i = 0; i < points.Length; i++)
@@ -61,7 +61,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// <param name="byteX">x coordinate as byte value.</param>
         /// <param name="bytePoints">Known points as tuple of bytes.</param>
         /// <returns>f(x).</returns>
-        public Field Interpolation(byte byteX, (byte, byte)[] bytePoints)
+        public static Field Interpolation(byte byteX, (byte, byte)[] bytePoints)
         {
             Field x = new Field(byteX);
             Point[] points = new Point[bytePoints.Length];
@@ -80,7 +80,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// <param name="numberOfShares">Amount of shares.</param>
         /// <param name="secret">Secret.</param>
         /// <returns>Array of shares.</returns>
-        public Share[] SplitSecret(byte threshold, byte numberOfShares, byte[] secret)
+        public static Share[] SplitSecret(byte threshold, byte numberOfShares, byte[] secret)
         {
             if (secret is null)
             {
@@ -133,7 +133,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// <param name="numberOfShares">Amount of shares.</param>
         /// <param name="secret">Secret.</param>
         /// <returns>Array of shares.</returns>
-        public byte[] SplitSecret(byte threshold, byte numberOfShares, byte secret)
+        public static byte[] SplitSecret(byte threshold, byte numberOfShares, byte secret)
         {
             if (threshold == 0)
             {
@@ -188,7 +188,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// </summary>
         /// <param name="shares"></param>
         /// <returns>Recovered secret.</returns>
-        public byte[] RecoverSecret(Share[] shares)
+        public static byte[] RecoverSecret(Share[] shares)
         {
             if (shares is null)
             {
@@ -230,7 +230,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// </summary>
         /// <param name="secretShares">Secret shares as points.</param>
         /// <returns>Main secret.</returns>
-        public byte RecoverSecret(Point[] secretShares)
+        public static byte RecoverSecret(Point[] secretShares)
         {
             return Interpolation(new Field(255), secretShares).GetValue();
         }
@@ -240,7 +240,7 @@ namespace TuviBytesShamirSecretSharingLib
         /// </summary>
         /// <param name="secretShares">Secret shares as tuple of bytes.</param>
         /// <returns>Main secret.</returns>
-        public byte RecoverSecret((byte, byte)[] secretShares)
+        public static byte RecoverSecret((byte, byte)[] secretShares)
         {
             Point[] points = new Point[secretShares.Length];
             for(byte i = 0; i < points.Length; i++)
