@@ -1,4 +1,20 @@
-﻿using GF256Computations;
+﻿///////////////////////////////////////////////////////////////////////////////
+//   Copyright 2022 Eppie (https://eppie.io)
+//
+//   Licensed under the Apache License, Version 2.0(the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+///////////////////////////////////////////////////////////////////////////////
+
+using GF256Computations;
 using System;
 using System.Security.Cryptography;
 
@@ -9,7 +25,7 @@ namespace TuviBytesShamirSecretSharingLib
     /// </summary>
     public class SecretSharing
     {
-        private const byte MaxAmountOfSHares = 16;
+        private const byte MaxAmountOfShares = 16;
 
         /// <summary>
         /// Interpolation function. Used to calculate f(x) using known points.
@@ -81,9 +97,9 @@ namespace TuviBytesShamirSecretSharingLib
                 throw new ArgumentException("Threshold can not be bigger than number of shares.");
             }
 
-            if (numberOfShares > MaxAmountOfSHares)
+            if (numberOfShares > MaxAmountOfShares)
             {
-                throw new ArgumentOutOfRangeException(nameof(numberOfShares), $"Too many shares, max amount - {MaxAmountOfSHares}.");
+                throw new ArgumentOutOfRangeException(nameof(numberOfShares), $"Too many shares, max amount - {MaxAmountOfShares}.");
             }
 
             byte[][] result = new byte[numberOfShares][];
@@ -129,9 +145,9 @@ namespace TuviBytesShamirSecretSharingLib
                 throw new ArgumentException("Threshold can not be bigger than number of shares.");
             }
 
-            if (numberOfShares > MaxAmountOfSHares)
+            if (numberOfShares > MaxAmountOfShares)
             {
-                throw new ArgumentOutOfRangeException(nameof(numberOfShares), $"Too many shares, max amount - {MaxAmountOfSHares}.");
+                throw new ArgumentOutOfRangeException(nameof(numberOfShares), $"Too many shares, max amount - {MaxAmountOfShares}.");
             }
 
             byte[] result = new byte[numberOfShares];

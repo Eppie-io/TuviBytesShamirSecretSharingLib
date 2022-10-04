@@ -1,4 +1,18 @@
-﻿using System;
+﻿///////////////////////////////////////////////////////////////////////////////
+//   Copyright 2022 Eppie (https://eppie.io)
+//
+//   Licensed under the Apache License, Version 2.0(the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+///////////////////////////////////////////////////////////////////////////////
 
 namespace GF256Computations
 {
@@ -22,12 +36,14 @@ namespace GF256Computations
             value = 0;
         }
 
-        public Field(byte _value)
+        public Field(byte value)
         {
-            value = _value;
+            this.value = value;
         }
 
-        //generates Exp & Log table for fast multiplication operator
+        /// <summary>
+        /// Generates Exp & Log tables for fast multiplication/division calculations.
+        /// </summary>
         static Field()
         {
             byte val = 0x01;
@@ -42,15 +58,22 @@ namespace GF256Computations
             }
         }
 
-        //getters and setters
+        /// <summary>
+        /// Getter.
+        /// </summary>
+        /// <returns></returns>
         public byte GetValue()
         {
             return value;
         }
 
-        public void SetValue(byte _value)
+        /// <summary>
+        /// Setter.
+        /// </summary>
+        /// <param name="_value"></param>
+        public void SetValue(byte value)
         {
-            value = _value;
+            this.value = value;
         }
 
         //operators
@@ -153,8 +176,13 @@ namespace GF256Computations
             return value.ToString();
         }
 
-        //multiplication method which is only used in Exp & Log table generation
-        //implemented with Russian Peasant Multiplication algorithm
+        /// <summary>
+        /// Multiplication method which is only used in Exp & Log table generation.
+        /// Implemented with Russian Peasant Multiplication algorithm.
+        /// </summary>
+        /// <param name="a">Factor1.</param>
+        /// <param name="b">Factor2.</param>
+        /// <returns>Result of multiplication.</returns>
         private static byte Multiply(byte a, byte b)
         {
             byte result = 0;
