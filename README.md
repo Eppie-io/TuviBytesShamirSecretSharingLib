@@ -16,13 +16,16 @@ How to use:
 
 `byte[] shares = SecretSharing.SplitSecret(T, N, secret);`
 
-#Important!# You MUST remember indexes of each share to recover main secret. 
+!!! IMPORTANT!!! You MUST remember indexes of each share to recover main secret. 
 
 To remember index and value of your partitional secret you can use our class Point:
 
-`public class Point
-{
+`public class Point`
+
+`{`
+
     public Field X { get; set; } // index
+    
     public Field Y { get; set; } // value
 
     public Point (byte x, byte y) // ctor
@@ -30,9 +33,9 @@ To remember index and value of your partitional secret you can use our class Poi
         X = new Field(x);
         Y = new Field(y);
     }
-}`
+`}`
 
-Class Field is a value in a finite field GF(256). To read more about finite fields: https://en.wikipedia.org/wiki/Finite_field
+Class Field is a value of a finite field GF(256). To read more about finite fields: https://en.wikipedia.org/wiki/Finite_field
 
 To recover main secret you should have an array of at least T secret shares (partitional secrets) with its index numbers. 
 Each of them should be represented as class Point or Tuple (byte indexNumber, byte Value).
@@ -42,19 +45,24 @@ Each of them should be represented as class Point or Tuple (byte indexNumber, by
 `byte secret = SecretSharing.RecoverSecret((byte, byte)[] secretShares)`
 
 2. If your secret is an array of bytes the result of sharing will be an array of Share (our special class). 
-`public class Share
-{
+    
+`public class Share`
+
+`{`
+
     public byte IndexNumber { get; }
+    
     public byte[] ShareValue { get; }
 
     public Share(byte index, byte[] value) // ctor
-}`
+   
+`}`
 
 `Share[] result = SecretSharing.SplitSecret(4, 6, secret); // T = 4, N = 6`
 
 To recover main secret you should have an array of at least T secret shares (partitional secrets):
 
-byte[] secret = SecretSharing.RecoverSecret(Share[] shares);`
+`byte[] secret = SecretSharing.RecoverSecret(Share[] shares);`
 
 
 
