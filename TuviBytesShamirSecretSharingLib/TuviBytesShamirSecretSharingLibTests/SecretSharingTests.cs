@@ -17,20 +17,12 @@
 using GF256Computations;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using TuviBytesShamirSecretSharingLib;
 
 namespace TuviBytesShamirSecretSharingLibTests
 {
     public class SecretSharingTests
     {
-        [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesInterpolation))]
-        public void InterpolationTests(byte x, Point[] points, byte expectedResult)
-        {
-            var result = SecretSharing.Interpolation(new Field(x), points);
-            Assert.AreEqual(expectedResult, result.GetValue());
-        }
-
         [TestCase (28)]
         [TestCase (144)]
         public void ThresholdOneTest(byte secret)

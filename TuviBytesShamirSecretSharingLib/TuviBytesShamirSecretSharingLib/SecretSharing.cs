@@ -26,73 +26,7 @@ namespace TuviBytesShamirSecretSharingLib
     public static class SecretSharing
     {
         private const byte MaxAmountOfShares = 16;
-
-        /// <summary>
-        /// Interpolation function. Used to calculate f(x) using known points.
-        /// </summary>
-        /// <param name="x">x coordinate as value over GF(256).</param>
-        /// <param name="points">Known points.</param>
-        /// <returns>f(x).</returns>
-        public static Field Interpolation(Field x, Point[] points)
-        {
-            if (points is null)
-            {
-                throw new ArgumentNullException(nameof(points));
-            }
-
-            if (points.Length < 1)
-            {
-                throw new ArgumentException("You should send at least 1 point to interpolate function.", nameof(points));
-            }
-
-            Field result = new Field(0);
-            for (int i = 0; i < points.Length; i++)
-            {
-                Field product = new Field(1);
-                for (int j = 0; j < i; j++)
-                {
-                    product *= (x - points[j].X) / (points[i].X - points[j].X);
-                }
-
-                for (int j = i + 1; j < points.Length; j++)
-                {
-                    product *= (x - points[j].X) / (points[i].X - points[j].X);
-                }
-
-                result += points[i].Y * product;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Interpolation function. Used to calculate f(x) using known points.
-        /// </summary>
-        /// <param name="byteX">x coordinate as byte value.</param>
-        /// <param name="bytePoints">Known points as tuple of bytes.</param>
-        /// <returns>f(x).</returns>
-        public static Field Interpolation(byte byteX, (byte, byte)[] bytePoints)
-        {
-            if (bytePoints is null)
-            {
-                throw new ArgumentNullException(nameof(bytePoints));
-            }
-
-            if (bytePoints.Length < 1)
-            {
-                throw new ArgumentException("You should send at least 1 point to interpolate function.", nameof(bytePoints));
-            }
-
-            Field x = new Field(byteX);
-            Point[] points = new Point[bytePoints.Length];
-            for (int i = 0; i < points.Length; i++)
-            {
-                points[i] = new Point(bytePoints[i].Item1, bytePoints[i].Item2);
-            }
-
-            return Interpolation(x, points);
-        }
-
+                
         /// <summary>
         /// Simple version of secret splitting. Secret is an array of bytes.
         /// </summary>
@@ -202,7 +136,7 @@ namespace TuviBytesShamirSecretSharingLib
             
             for (byte i = (byte)(threshold - 1); i < numberOfShares; i++)
             {
-                result[i] = Interpolation(new Field(i), points).GetValue();
+                result[i] = Interpolation.Interpolate(new Field(i), points).GetValue();
             }
 
             return result;
@@ -267,7 +201,7 @@ namespace TuviBytesShamirSecretSharingLib
                 throw new ArgumentException("You should send at least 1 share to recover secret.", nameof(secretShares));
             }
 
-            return Interpolation(new Field(255), secretShares).GetValue();
+            return Interpolation.Interpolate(new Field(255), secretShares).GetValue();
         }
 
         /// <summary>
@@ -293,7 +227,7 @@ namespace TuviBytesShamirSecretSharingLib
                 points[i] = new Point(secretShares[i].Item1, secretShares[i].Item2);
             }
 
-            return Interpolation(new Field(255), points).GetValue();
+            return Interpolation.Interpolate(new Field(255), points).GetValue();
         }
 
         

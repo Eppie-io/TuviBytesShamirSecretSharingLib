@@ -22,7 +22,7 @@ namespace TuviBytesShamirSecretSharingLibTests
 {
     internal static class TestCasesDataSource
     {
-        public static IEnumerable<TestCaseData> TestCasesForBytesInterpolation
+        public static IEnumerable<TestCaseData> TestCasesForPointsInterpolation
         {
             get
             {
@@ -32,6 +32,23 @@ namespace TuviBytesShamirSecretSharingLibTests
                     (byte)13, new Point[] { new Point(1, 0), new Point(2, 3) }, (byte)12); //y = x - 1
                 yield return new TestCaseData(
                     (byte)3, new Point[] { new Point(0, 5), new Point(1, 7), new Point(2, 7) }, (byte)5); //y = x^2 + 3x + 5
+                yield return new TestCaseData(
+                    (byte)4, new Point[] { new Point(0, 5), new Point(1, 7), new Point(2, 7) }, (byte)25); //y = x^2 + 3x + 5
+            }
+        }
+
+        public static IEnumerable<TestCaseData> TestCasesForBytesInterpolation
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    (byte)8, new byte[] { 1, 2 }, new byte[] { 0, 3 }, (byte)9); //y = x - 1
+                yield return new TestCaseData(
+                    (byte)13, new byte[] { 1, 2 }, new byte[] { 0, 3 }, (byte)12); //y = x - 1
+                yield return new TestCaseData(
+                    (byte)3, new byte[] { 0, 1, 2 }, new byte[] { 5, 7, 7 }, (byte)5); //y = x^2 + 3x + 5
+                yield return new TestCaseData(
+                    (byte)4, new byte[] { 0, 1, 2 }, new byte[] { 5, 7, 7 }, (byte)25); //y = x^2 + 3x + 5
             }
         }
 
