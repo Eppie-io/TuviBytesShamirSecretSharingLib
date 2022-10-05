@@ -35,6 +35,16 @@ namespace TuviBytesShamirSecretSharingLib
         /// <returns>f(x).</returns>
         public static Field Interpolation(Field x, Point[] points)
         {
+            if (points is null)
+            {
+                throw new ArgumentNullException(nameof(points));
+            }
+
+            if (points.Length < 1)
+            {
+                throw new ArgumentException("You should send at least 1 point to interpolate function.", nameof(points));
+            }
+
             Field result = new Field(0);
             for (int i = 0; i < points.Length; i++)
             {
@@ -63,6 +73,16 @@ namespace TuviBytesShamirSecretSharingLib
         /// <returns>f(x).</returns>
         public static Field Interpolation(byte byteX, (byte, byte)[] bytePoints)
         {
+            if (bytePoints is null)
+            {
+                throw new ArgumentNullException(nameof(bytePoints));
+            }
+
+            if (bytePoints.Length < 1)
+            {
+                throw new ArgumentException("You should send at least 1 point to interpolate function.", nameof(bytePoints));
+            }
+
             Field x = new Field(byteX);
             Point[] points = new Point[bytePoints.Length];
             for (int i = 0; i < points.Length; i++)
@@ -85,6 +105,11 @@ namespace TuviBytesShamirSecretSharingLib
             if (secret is null)
             {
                 throw new ArgumentNullException(nameof(secret));
+            }
+
+            if (secret.Length < 1)
+            {
+                throw new ArgumentException("Secret array should have at least one byte to split secret.", nameof(secret));
             }
 
             if (threshold == 0)
@@ -192,7 +217,7 @@ namespace TuviBytesShamirSecretSharingLib
         {
             if (shares is null)
             {
-                throw new ArgumentException(nameof(shares));
+                throw new ArgumentNullException(nameof(shares));
             }
 
             if (shares.Length < 1)
@@ -232,6 +257,16 @@ namespace TuviBytesShamirSecretSharingLib
         /// <returns>Main secret.</returns>
         public static byte RecoverSecret(Point[] secretShares)
         {
+            if (secretShares is null)
+            {
+                throw new ArgumentNullException(nameof(secretShares));
+            }
+
+            if (secretShares.Length < 1)
+            {
+                throw new ArgumentException("You should send at least 1 share to recover secret.", nameof(secretShares));
+            }
+
             return Interpolation(new Field(255), secretShares).GetValue();
         }
 
@@ -242,6 +277,16 @@ namespace TuviBytesShamirSecretSharingLib
         /// <returns>Main secret.</returns>
         public static byte RecoverSecret((byte, byte)[] secretShares)
         {
+            if (secretShares is null)
+            {
+                throw new ArgumentNullException(nameof(secretShares));
+            }
+
+            if (secretShares.Length < 1)
+            {
+                throw new ArgumentException("You should send at least 1 share to recover secret.", nameof(secretShares));
+            }
+
             Point[] points = new Point[secretShares.Length];
             for(byte i = 0; i < points.Length; i++)
             {
