@@ -14,8 +14,8 @@ byte T = 3;
 byte N = 5;
 byte[] shares = SecretSharing.SplitSecret(T, N, secret);
 ```
-ЮБ
-!!! IMPORTANT!!! You MUST remember indexes of each share to recover main secret correctly. 
+
+!!! IMPORTANT !!! You MUST remember indexes of each share to recover main secret correctly. 
 
 To remember index and value of your partial secret you can use our class Point:
 
