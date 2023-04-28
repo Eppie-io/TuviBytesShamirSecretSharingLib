@@ -18,6 +18,7 @@ using NUnit.Framework;
 using System;
 using TuviBytesShamirSecretSharingLib;
 
+[assembly: CLSCompliant(true)]
 namespace TuviBytesShamirSecretSharingLibTests
 {
     public class SecretSharingTests

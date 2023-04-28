@@ -18,6 +18,7 @@ using GF256Computations;
 using System;
 using System.Security.Cryptography;
 
+[assembly: CLSCompliant(true)]
 namespace TuviBytesShamirSecretSharingLib
 {
     /// <summary>
