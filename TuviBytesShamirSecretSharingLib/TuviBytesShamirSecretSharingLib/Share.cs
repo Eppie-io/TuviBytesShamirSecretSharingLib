@@ -58,7 +58,7 @@ namespace TuviBytesShamirSecretSharingLib
             }
 
             IndexNumber = index;
-            shareValue = (new byte[value.Length]);
+            shareValue = new byte[value.Length];
             for (int i = 0; i < value.Length; i++)
             {
                 GetShareValue()[i] = value[i];
