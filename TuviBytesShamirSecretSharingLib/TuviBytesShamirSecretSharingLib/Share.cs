@@ -14,6 +14,8 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
+using System;
+
 namespace TuviBytesShamirSecretSharingLib
 {
     /// <summary>
@@ -21,15 +23,22 @@ namespace TuviBytesShamirSecretSharingLib
     /// </summary>
     public class Share
     {
+        private const byte MaxIndexNumber = 15;
+
         /// <summary>
         /// Share's index number. Value of point X in scheme for this share.
         /// </summary>
         public byte IndexNumber { get; }
 
+        private readonly byte[] shareValue;
+
         /// <summary>
         /// Share's value. Value f(X) of secret share for each byte in array.
         /// </summary>
-        public byte[] ShareValue { get; }
+        public byte[] GetShareValue()
+        {
+            return shareValue;
+        }
 
         /// <summary>
         /// Constructor of secret share.
@@ -38,11 +47,21 @@ namespace TuviBytesShamirSecretSharingLib
         /// <param name="value">Share's value.</param>
         public Share(byte index, byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (index > MaxIndexNumber)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), $"Share's index number can not be bigger than {MaxIndexNumber}.");
+            }
+
             IndexNumber = index;
-            ShareValue = new byte[value.Length];
+            shareValue = (new byte[value.Length]);
             for (int i = 0; i < value.Length; i++)
             {
-                ShareValue[i] = value[i];
+                GetShareValue()[i] = value[i];
             }
         }
     }

@@ -122,24 +122,26 @@ namespace TuviBytesShamirSecretSharingLib
                 return result;
             }
 
-            RandomNumberGenerator generator = RandomNumberGenerator.Create();
-            byte[] random = new byte[threshold - 1];
-            generator.GetBytes(random);
-
-            for (byte i = 0; i < threshold - 1; i++)
+            using (RandomNumberGenerator generator = RandomNumberGenerator.Create())
             {
-                result[i] = random[i];
-                points[i] = new Point(i, random[i]);
-            }
+                byte[] random = new byte[threshold - 1];
+                generator.GetBytes(random);
 
-            points[threshold - 1] = new Point(255, secret);
-            
-            for (byte i = (byte)(threshold - 1); i < numberOfShares; i++)
-            {
-                result[i] = Interpolation.Interpolate(new Field(i), points).GetValue();
-            }
+                for (byte i = 0; i < threshold - 1; i++)
+                {
+                    result[i] = random[i];
+                    points[i] = new Point(i, random[i]);
+                }
 
-            return result;
+                points[threshold - 1] = new Point(255, secret);
+
+                for (byte i = (byte)(threshold - 1); i < numberOfShares; i++)
+                {
+                    result[i] = Interpolation.Interpolate(new Field(i), points).Value;
+                }
+
+                return result;
+            }
         }
 
         /// <summary>
@@ -159,10 +161,10 @@ namespace TuviBytesShamirSecretSharingLib
                 throw new ArgumentException("You should send at least 1 share to recover secret.", nameof(shares));
             }
 
-            int size = shares[0].ShareValue.Length;
+            int size = shares[0].GetShareValue().Length;
             foreach (var share in shares)
             {
-                if (share.ShareValue.Length != size)
+                if (share.GetShareValue().Length != size)
                 {
                     throw new ArgumentException("Your shares have different size.");
                 }
@@ -175,7 +177,7 @@ namespace TuviBytesShamirSecretSharingLib
                 Point[] points = new Point[shares.Length];
                 for (byte j = 0; j < shares.Length; j++)
                 {
-                    points[j] = new Point(shares[j].IndexNumber, shares[j].ShareValue[i]);
+                    points[j] = new Point(shares[j].IndexNumber, shares[j].GetShareValue()[i]);
                 }
 
                 resultSecret[i] = RecoverSecret(points);
@@ -201,7 +203,7 @@ namespace TuviBytesShamirSecretSharingLib
                 throw new ArgumentException("You should send at least 1 share to recover secret.", nameof(secretShares));
             }
 
-            return Interpolation.Interpolate(new Field(255), secretShares).GetValue();
+            return Interpolation.Interpolate(new Field(255), secretShares).Value;
         }
 
         /// <summary>
@@ -227,7 +229,7 @@ namespace TuviBytesShamirSecretSharingLib
                 points[i] = new Point(secretShares[i].Item1, secretShares[i].Item2);
             }
 
-            return Interpolation.Interpolate(new Field(255), points).GetValue();
+            return Interpolation.Interpolate(new Field(255), points).Value;
         }
 
         

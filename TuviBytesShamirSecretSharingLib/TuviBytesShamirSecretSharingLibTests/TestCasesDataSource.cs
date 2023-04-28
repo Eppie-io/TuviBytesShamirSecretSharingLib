@@ -52,10 +52,23 @@ namespace TuviBytesShamirSecretSharingLibTests
             }
         }
 
+        public static IEnumerable<TestCaseData> TestCasesForShareCreation
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    (byte)8, new byte[] { 1, 2 });
+                yield return new TestCaseData(
+                    (byte)13, new byte[] { 111, 222, 155, 255 });
+            }
+        }
+
         public static IEnumerable<byte[]> TestCasesForBytesArraySecretRecovery
         {
             get
             {
+                yield return new byte[] { 253, 19, 175, 128, 0, 0 };
+                yield return new byte[] { 0, 0, 175, 128, 64, 201 };
                 yield return new byte[] { 253, 19, 175, 128, 64, 201 };
                 yield return new byte[] { 33, 44, 55, 69, 115, 221, 186, 2, 201, 191, 117 };
                 yield return new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };

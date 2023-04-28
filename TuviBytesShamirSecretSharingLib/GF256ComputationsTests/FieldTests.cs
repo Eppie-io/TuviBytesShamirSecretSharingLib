@@ -16,11 +16,20 @@
 
 using GF256Computations;
 using NUnit.Framework;
+using System;
+using TuviBytesShamirSecretSharingLibTests;
 
 namespace GF256ComputationsTests
 {
     public class FieldTests
-    {        
+    {
+        [Test]
+        public void ConstructorTest()
+        {
+            Field field = new Field();
+            Assert.AreEqual(0, field.Value);
+        }
+
         [TestCase(1, 2, 3)]
         [TestCase(2, 1, 3)]
         [TestCase(9, 4, 13)]
@@ -31,6 +40,19 @@ namespace GF256ComputationsTests
             Field addendum2 = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = addendum1 + addendum2;
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCase(1, 2, 3)]
+        [TestCase(2, 1, 3)]
+        [TestCase(9, 4, 13)]
+        [TestCase(45, 10, 39)]
+        public void AdditionAsFunctionTests(byte a, byte b, byte result)
+        {
+            Field addendum1 = new Field(a);
+            Field addendum2 = new Field(b);
+            Field expectedResult = new Field(result);
+            var actualResult = Field.Add(addendum1, addendum2);
             Assert.AreEqual(expectedResult, actualResult);
         }
 
@@ -47,6 +69,19 @@ namespace GF256ComputationsTests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        [TestCase(2, 1, 3)]
+        [TestCase(13, 4, 9)]
+        [TestCase(45, 10, 39)]
+        [TestCase(2, 253, 255)]
+        public void SubtractionAsFunctionTests(byte a, byte b, byte result)
+        {
+            Field minuend = new Field(a);
+            Field subtrahend = new Field(b);
+            Field expectedResult = new Field(result);
+            var actualResult = Field.Subtract(minuend, subtrahend);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
         [TestCase(2, 1, 2)]
         [TestCase(222, 1, 222)]
         [TestCase(2, 2, 4)]
@@ -56,12 +91,30 @@ namespace GF256ComputationsTests
         [TestCase(133, 3, 148)]
         [TestCase(202, 15, 74)]
         [TestCase(76, 94, 207)]
-        public void MultiplyTests(byte a, byte b, byte result)
+        public void MultiplicationTests(byte a, byte b, byte result)
         {
             Field factor1 = new Field(a);
             Field factor2 = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = factor1 * factor2;
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCase(2, 1, 2)]
+        [TestCase(222, 1, 222)]
+        [TestCase(2, 2, 4)]
+        [TestCase(2, 5, 10)]
+        [TestCase(7, 3, 9)]
+        [TestCase(7, 7, 21)]
+        [TestCase(133, 3, 148)]
+        [TestCase(202, 15, 74)]
+        [TestCase(76, 94, 207)]
+        public void MultiplicationAsFunctionTests(byte a, byte b, byte result)
+        {
+            Field factor1 = new Field(a);
+            Field factor2 = new Field(b);
+            Field expectedResult = new Field(result);
+            var actualResult =Field.Multiply(factor1, factor2);
             Assert.AreEqual(expectedResult, actualResult);
         }
 
@@ -76,6 +129,20 @@ namespace GF256ComputationsTests
             Field divider = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = dividend / divider;
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCase(155, 131, 181)]
+        [TestCase(74, 15, 202)]
+        [TestCase(207, 94, 76)]
+        [TestCase(189, 111, 44)]
+        [TestCase(223, 214, 178)]
+        public void DivisionAsFunctionTests(byte a, byte b, byte result)
+        {
+            Field dividend = new Field(a);
+            Field divider = new Field(b);
+            Field expectedResult = new Field(result);
+            var actualResult = Field.Divide(dividend, divider);
             Assert.AreEqual(expectedResult, actualResult);
         }
 
@@ -99,8 +166,61 @@ namespace GF256ComputationsTests
         {
             Field basis = new Field(a);
             Field expectedResult = new Field(result);
-            var actualResult = Field.pow(basis, degree);
+            var actualResult = Field.Pow(basis, degree);
             Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCase(2, 3, false)]
+        [TestCase(3, 3, true)]
+        [TestCase(25, 14, false)]
+        [TestCase(139, 139, true)]
+        [TestCase(null, 251, false)]
+        [TestCase(182, null, false)]
+        public void EqualsTests(byte a, byte b, bool expectedResult)
+        {
+            Field left = new Field(a);
+            Field right = new Field(b);
+            var actualResult = left.Equals(right);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForEquality))]
+        public void EqualsOperatorTests(Field left, Field right, bool expectedResult)
+        {
+            Assert.AreEqual(expectedResult, left == right);
+            Assert.AreEqual(!expectedResult, left != right);
+        }
+
+        [TestCase(134)]
+        [TestCase(22)]
+        [TestCase(253)]
+        [TestCase(178)]
+        public void GetHashCodeTests(int value)
+        {
+            Field field = new Field((byte)value);
+            int result = field.GetHashCode();
+            Assert.AreEqual(value, result);
+        }
+
+        [Test]
+        public void ToStringTests()
+        {
+            Field field = new Field(15);
+            var result = field.ToString();
+            Assert.AreEqual("15", result);
+            field = new Field(234);
+            result = field.ToString();
+            Assert.AreEqual("234", result);
+        }
+
+        [TestCase(189, 0)]
+        [TestCase(223, 0)]
+        public void DivisionByZeroThrowArgumentException(byte a, byte b)
+        {
+            Field dividend = new Field(a);
+            Field divider = new Field(b);
+            Assert.Throws<ArgumentException>(() => Field.Divide(dividend, divider),
+                message: "Share array can not be a null.");
         }
     }
 }

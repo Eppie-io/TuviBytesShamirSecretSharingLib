@@ -24,15 +24,24 @@ namespace TuviBytesShamirSecretSharingLibTests
     public class InterpolationTests
     {
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForPointsInterpolation))]
-        public void InterpolateFromPoints_CorrectWorkTests(byte x, Point[] points, byte expectedResult)
+        public void InterpolateFromPointsCorrectWorkTests(byte x, Point[] points, byte expectedResult)
         {
             var result = Interpolation.Interpolate(new Field(x), points);
-            Assert.AreEqual(expectedResult, result.GetValue());
+            Assert.AreEqual(expectedResult, result.Value);
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesInterpolation))]
-        public void InterpolateFromByteTuples_CorrectWorkTests(byte x, byte[] xValues, byte[] yValues, byte expectedResult)
+        public void InterpolateFromByteTuplesCorrectWorkTests(byte x, byte[] xValues, byte[] yValues, byte expectedResult)
         {
+            if (xValues is null)
+            {
+                throw new ArgumentNullException(nameof(xValues));
+            }
+            if (yValues is null)
+            {
+                throw new ArgumentNullException(nameof(yValues));
+            }
+
             (byte, byte)[] points = new (byte, byte)[xValues.Length];
             for (int i = 0; i < xValues.Length; i++)
             {
@@ -40,35 +49,35 @@ namespace TuviBytesShamirSecretSharingLibTests
             }
 
             var result = Interpolation.Interpolate(x, points);
-            Assert.AreEqual(expectedResult, result.GetValue());
+            Assert.AreEqual(expectedResult, result.Value);
         }
 
         [Test]
-        public void InterpolateFromPoints_PointsIsNull_ThrowArgumentNullException()
+        public void InterpolateFromPointsPointsIsNullThrowArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => Interpolation.Interpolate(new Field(3), null),
                 message: "Points can not be a null.");
         }
 
         [Test]
-        public void InterpolateFromPoints_PointsIsIsEmptyArray_ThrowArgumentException()
+        public void InterpolateFromPointsPointsIsIsEmptyArrayThrowArgumentException()
         {
-            Point[] points = new Point[0];
+            Point[] points = Array.Empty<Point>();
             Assert.Throws<ArgumentException>(() => Interpolation.Interpolate(new Field(3), points),
                 message: "There are should be at least 1 point to interpolate function.");
         }
         
         [Test]
-        public void InterpolateFromByteTuples_PointsIsNull_ThrowArgumentNullException()
+        public void InterpolateFromByteTuplesPointsIsNullThrowArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => Interpolation.Interpolate(3, null),
                 message: "Points can not be a null.");
         }
 
         [Test]
-        public void InterpolateFromByteTuples_PointsIsIsEmptyArray_ThrowArgumentException()
+        public void InterpolateFromByteTuplesPointsIsIsEmptyArrayThrowArgumentException()
         {
-            (byte,byte)[] points = new (byte, byte)[0];
+            (byte,byte)[] points = Array.Empty<(byte, byte)>();
             Assert.Throws<ArgumentException>(() => Interpolation.Interpolate(3, points),
                 message: "There are should be least 1 point to interpolate function.");
         }
