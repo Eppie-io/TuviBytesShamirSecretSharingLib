@@ -6,6 +6,7 @@
 using System;
 using System.Globalization;
 
+[assembly: CLSCompliant(true)]
 namespace GF256Computations
 {
     /// <summary>

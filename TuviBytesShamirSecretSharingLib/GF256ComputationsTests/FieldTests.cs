@@ -19,6 +19,7 @@ using NUnit.Framework;
 using System;
 using TuviBytesShamirSecretSharingLibTests;
 
+[assembly: CLSCompliant(true)]
 namespace GF256ComputationsTests
 {
     public class FieldTests
