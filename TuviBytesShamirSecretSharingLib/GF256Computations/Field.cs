@@ -199,7 +199,7 @@ namespace GF256Computations
 
         public override string ToString()
         {
-            return Value.ToString(new CultureInfo("en-us"));
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
