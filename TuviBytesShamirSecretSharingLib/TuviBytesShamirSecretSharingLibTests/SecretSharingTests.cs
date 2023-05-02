@@ -18,6 +18,7 @@ using NUnit.Framework;
 using System;
 using TuviBytesShamirSecretSharingLib;
 
+[assembly: CLSCompliant(true)]
 namespace TuviBytesShamirSecretSharingLibTests
 {
     public class SecretSharingTests
@@ -35,7 +36,17 @@ namespace TuviBytesShamirSecretSharingLibTests
 
         [TestCase(119)]
         [TestCase(231)]
-        public void SecretRecovery_AllPossibilitiesTests(byte secret)
+        public void SecretRecoveryAsByteTuplesAllPossibilitiesTests(byte secret)
+        {
+            byte[] result = SecretSharing.SplitSecret(2, 3, secret);
+            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new (byte, byte)[] { (0, result[0]), (1, result[1]) }));
+            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new (byte, byte)[] { (0, result[0]), (2, result[2]) }));
+            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new (byte, byte)[] { (1, result[1]), (2, result[2]) }));
+        }
+
+        [TestCase(119)]
+        [TestCase(231)]
+        public void SecretRecoveryAllPossibilitiesTests(byte secret)
         {
             byte[] result = SecretSharing.SplitSecret(3, 5, secret);
             Point point0 = new Point(0, result[0]);
@@ -57,7 +68,7 @@ namespace TuviBytesShamirSecretSharingLibTests
 
         [TestCase(94)]
         [TestCase(167)]
-        public void SecretRecovery_FailureNotEnoughSharesTests(byte secret)
+        public void SecretRecoveryFailureNotEnoughSharesTests(byte secret)
         {
             byte[] result = SecretSharing.SplitSecret(3, 5, secret);
             Point point0 = new Point(0, result[0]);
@@ -78,14 +89,14 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesArraySecretRecovery))]
-        public void ArraySecretRecovery_AllPossibilitiesTests1(byte[] secret)
+        public void ArraySecretRecoveryAllPossibilitiesTests1(byte[] secret)
         {
             var result = SecretSharing.SplitSecret(3, 5, secret);
-            Share share0 = new Share(0, result[0].ShareValue);
-            Share share1 = new Share(1, result[1].ShareValue);
-            Share share2 = new Share(2, result[2].ShareValue);
-            Share share3 = new Share(3, result[3].ShareValue);
-            Share share4 = new Share(4, result[4].ShareValue);
+            Share share0 = new Share(0, result[0].GetShareValue());
+            Share share1 = new Share(1, result[1].GetShareValue());
+            Share share2 = new Share(2, result[2].GetShareValue());
+            Share share3 = new Share(3, result[3].GetShareValue());
+            Share share4 = new Share(4, result[4].GetShareValue());
             Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2 }));
             Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share3 }));
             Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share4 }));
@@ -99,15 +110,15 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesArraySecretRecovery))]
-        public void ArraySecretRecovery_AllPossibilitiesTests2(byte[] secret)
+        public void ArraySecretRecoveryAllPossibilitiesTests2(byte[] secret)
         {
             Share[] result = SecretSharing.SplitSecret(4, 6, secret);
-            Share share0 = new Share(0, result[0].ShareValue);
-            Share share1 = new Share(1, result[1].ShareValue);
-            Share share2 = new Share(2, result[2].ShareValue);
-            Share share3 = new Share(3, result[3].ShareValue);
-            Share share4 = new Share(4, result[4].ShareValue);
-            Share share5 = new Share(5, result[5].ShareValue);
+            Share share0 = new Share(0, result[0].GetShareValue());
+            Share share1 = new Share(1, result[1].GetShareValue());
+            Share share2 = new Share(2, result[2].GetShareValue());
+            Share share3 = new Share(3, result[3].GetShareValue());
+            Share share4 = new Share(4, result[4].GetShareValue());
+            Share share5 = new Share(5, result[5].GetShareValue());
             Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share3 }));
             Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share4 }));
             Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share5 }));
@@ -126,14 +137,14 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesArraySecretRecovery))]
-        public void ArraySecretRecovery_FailureNotEnoughSharesTests(byte[] secret)
+        public void ArraySecretRecoveryFailureNotEnoughSharesTests(byte[] secret)
         {
             Share[] result = SecretSharing.SplitSecret(3, 5, secret);
-            Share share0 = new Share(0, result[0].ShareValue);
-            Share share1 = new Share(1, result[1].ShareValue);
-            Share share2 = new Share(2, result[2].ShareValue);
-            Share share3 = new Share(3, result[3].ShareValue);
-            Share share4 = new Share(4, result[4].ShareValue);
+            Share share0 = new Share(0, result[0].GetShareValue());
+            Share share1 = new Share(1, result[1].GetShareValue());
+            Share share2 = new Share(2, result[2].GetShareValue());
+            Share share3 = new Share(3, result[3].GetShareValue());
+            Share share4 = new Share(4, result[4].GetShareValue());
             Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1 }));
             Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2 }));
             Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share3 }));
@@ -147,7 +158,18 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [Test]
-        public void RecoverSecret_ShareArrayIsNull_ThrowArgumentNullException()
+        public void RecoverSecretSharesHaveDifferentSizeThrowArgumentNullException()
+        {
+            Share[] shares = new Share[] {
+                new Share(1, new byte[] {1, 2, 3}),
+                new Share(2, new byte[] {1, 2, 3, 4}),
+                new Share(5, new byte[] {11, 12, 13, 14, 15})};
+            Assert.Throws<ArgumentException>(() => SecretSharing.RecoverSecret(shares),
+                message: "Your shares have different size.");
+        }
+
+        [Test]
+        public void RecoverSecretShareArrayIsNullThrowArgumentNullException()
         {
             Share[] shares = null;
             Assert.Throws<ArgumentNullException>(() => SecretSharing.RecoverSecret(shares),
@@ -155,7 +177,7 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [Test]
-        public void RecoverSecret_PointArrayIsNull_ThrowArgumentNullException()
+        public void RecoverSecretPointArrayIsNullThrowArgumentNullException()
         {
             Point[] shares = null;
             Assert.Throws<ArgumentNullException>(() => SecretSharing.RecoverSecret(shares),
@@ -163,7 +185,7 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [Test]
-        public void RecoverSecret_ByteTupleArrayIsNull_ThrowArgumentNullException()
+        public void RecoverSecretByteTupleArrayIsNullThrowArgumentNullException()
         {
             (byte, byte)[] shares = null;
             Assert.Throws<ArgumentNullException>(() => SecretSharing.RecoverSecret(shares),
@@ -171,46 +193,46 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [Test]
-        public void RecoverSecret_ShareArrayIsEmpty_ThrowArgumentException()
+        public void RecoverSecretShareArrayIsEmptyThrowArgumentException()
         {
-            Share[] shares = new Share[0];
+            Share[] shares = Array.Empty<Share>();
             Assert.Throws<ArgumentException>(() => SecretSharing.RecoverSecret(shares),
                 message: "You should send at least 1 share to recover secret.");
         }
 
         [Test]
-        public void RecoverSecret_PointArrayIsEmpty_ThrowArgumentException()
+        public void RecoverSecretPointArrayIsEmptyThrowArgumentException()
         {
-            Point[] shares = new Point[0];
+            Point[] shares = Array.Empty<Point>();
             Assert.Throws<ArgumentException>(() => SecretSharing.RecoverSecret(shares),
                 message: "You should send at least 1 share to recover secret.");
         }
 
         [Test]
-        public void RecoverSecret_ByteTupleArrayIsEmpty_ThrowArgumentException()
+        public void RecoverSecretByteTupleArrayIsEmptyThrowArgumentException()
         {
-            (byte, byte)[] shares = new (byte, byte)[0];
+            (byte, byte)[] shares = Array.Empty<(byte, byte)>();
             Assert.Throws<ArgumentException>(() => SecretSharing.RecoverSecret(shares),
                 message: "You should send at least 1 share to recover secret.");
         }
 
         [Test]
-        public void SplitSecret_SecretIsNull_ThrowArgumentNullException()
+        public void SplitSecretSecretIsNullThrowArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => SecretSharing.SplitSecret(3, 5, null),
                 message: "Secret can not be a null.");
         }
 
         [Test]
-        public void SplitSecret_SecretIsEmptyArray_ThrowArgumentException()
+        public void SplitSecretSecretIsEmptyArrayThrowArgumentException()
         {
-            byte[] array = new byte[0];
-            Assert.Throws<ArgumentException>(() => SecretSharing.SplitSecret(3, 5, array),
+            byte[] secret = Array.Empty<byte>();
+            Assert.Throws<ArgumentException>(() => SecretSharing.SplitSecret(3, 5, secret),
                 message: "Secret array should have at least one byte to split secret.");
         }
 
         [Test]
-        public void SplitSecret_ThresholdIsZero_ThrowArgumentOutOfRangeException()
+        public void SplitSecretThresholdIsZeroThrowArgumentOutOfRangeException()
         {
             byte[] secret = new byte[5] { 45, 76, 192, 219, 14};
             Assert.Throws<ArgumentOutOfRangeException>(() => SecretSharing.SplitSecret(0, 5, secret),
@@ -218,7 +240,7 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [Test]
-        public void SplitSecret_ThresholdIsBiggerThanShares_ThrowArgumentException()
+        public void SplitSecretThresholdIsBiggerThanSharesThrowArgumentException()
         {
             byte[] secret = new byte[5] { 45, 76, 192, 219, 14 };
             Assert.Throws<ArgumentException>(() => SecretSharing.SplitSecret(6, 5, secret),
@@ -226,10 +248,34 @@ namespace TuviBytesShamirSecretSharingLibTests
         }
 
         [Test]
-        public void SplitSecret_NumberOfSharesIsTooBig_ThrowAArgumentOutOfRangeException()
+        public void SplitSecretNumberOfSharesIsTooBigThrowAArgumentOutOfRangeException()
         {
-            byte[] array = new byte[] { 15, 93 };
-            Assert.Throws<ArgumentOutOfRangeException>(() => SecretSharing.SplitSecret(5, 17, array),
+            byte[] secret = new byte[] { 15, 93 };
+            Assert.Throws<ArgumentOutOfRangeException>(() => SecretSharing.SplitSecret(5, 17, secret),
+                message: "Too many shares, max amount - 16.");
+        }
+
+        [Test]
+        public void SplitSecretByteThresholdIsZeroThrowArgumentOutOfRangeException()
+        {
+            byte secret = 18;
+            Assert.Throws<ArgumentOutOfRangeException>(() => SecretSharing.SplitSecret(0, 5, secret),
+                message: "Threshold can not be 0.");
+        }
+
+        [Test]
+        public void SplitSecretByteThresholdIsBiggerThanSharesThrowArgumentException()
+        {
+            byte secret = 18;
+            Assert.Throws<ArgumentException>(() => SecretSharing.SplitSecret(6, 5, secret),
+                message: "Threshold can not be bigger than number of shares.");
+        }
+
+        [Test]
+        public void SplitSecretByteNumberOfSharesIsTooBigThrowAArgumentOutOfRangeException()
+        {
+            byte secret = 18;
+            Assert.Throws<ArgumentOutOfRangeException>(() => SecretSharing.SplitSecret(5, 17, secret),
                 message: "Too many shares, max amount - 16.");
         }
     }

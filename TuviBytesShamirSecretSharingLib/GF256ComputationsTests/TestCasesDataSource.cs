@@ -1,0 +1,44 @@
+﻿///////////////////////////////////////////////////////////////////////////////
+//   Copyright 2023 Eppie (https://eppie.io)
+//
+//   Licensed under the Apache License, Version 2.0(the "License");
+//   you may not use this file except in compliance with the License.
+//   You may obtain a copy of the License at
+//
+//   http://www.apache.org/licenses/LICENSE-2.0
+//
+//   Unless required by applicable law or agreed to in writing, software
+//   distributed under the License is distributed on an "AS IS" BASIS,
+//   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//   See the License for the specific language governing permissions and
+//   limitations under the License.
+///////////////////////////////////////////////////////////////////////////////
+
+using GF256Computations;
+using NUnit.Framework;
+using System.Collections.Generic;
+
+namespace TuviBytesShamirSecretSharingLibTests
+{
+    internal static class TestCasesDataSource
+    {
+        public static IEnumerable<TestCaseData> TestCasesForEquality
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    new Field(5), new Field(5), true);
+                yield return new TestCaseData(
+                    new Field(213), new Field(213), true);
+                yield return new TestCaseData(
+                    new Field(11), new Field(59), false);
+                yield return new TestCaseData(
+                    new Field(244), new Field(115), false);
+                yield return new TestCaseData(
+                    new Field(197), null, false);
+                yield return new TestCaseData(
+                    null, new Field(88), false);
+            }
+        }
+    }
+}

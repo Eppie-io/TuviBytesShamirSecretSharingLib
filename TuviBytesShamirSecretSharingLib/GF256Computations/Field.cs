@@ -3,6 +3,10 @@
 //   This project is licensed under the MIT License
 ///////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Globalization;
+
+[assembly: CLSCompliant(true)]
 namespace GF256Computations
 {
     /// <summary>
@@ -18,16 +22,14 @@ namespace GF256Computations
         protected readonly static byte[] Exp = new byte[order];
         protected readonly static byte[] Log = new byte[order];
 
-        private byte value;
-
         public Field()
         {
-            value = 0;
+            Value = 0;
         }
 
         public Field(byte value)
         {
-            this.value = value;
+            Value = value;
         }
 
         /// <summary>
@@ -47,23 +49,7 @@ namespace GF256Computations
             }
         }
 
-        /// <summary>
-        /// Getter.
-        /// </summary>
-        /// <returns></returns>
-        public byte GetValue()
-        {
-            return value;
-        }
-
-        /// <summary>
-        /// Setter.
-        /// </summary>
-        /// <param name="_value"></param>
-        public void SetValue(byte value)
-        {
-            this.value = value;
-        }
+        public byte Value { get; set; }
 
         //operators
         public static explicit operator Field(byte b)
@@ -74,51 +60,92 @@ namespace GF256Computations
 
         public static explicit operator byte(Field f)
         {
-            return f.value;
+            if (f is null)
+            {
+                throw new ArgumentNullException(nameof(f));
+            }
+
+            return f.Value;
         }
 
         public static Field operator +(Field Fa, Field Fb)
         {
-            byte bres = (byte)(Fa.value ^ Fb.value);
+            if (Fa is null)
+            {
+                throw new ArgumentNullException(nameof(Fa));
+            }
+            if (Fb is null)
+            {
+                throw new ArgumentNullException(nameof(Fb));
+            }
+
+            byte bres = (byte)(Fa.Value ^ Fb.Value);
             return new Field(bres);
         }
 
         public static Field operator -(Field Fa, Field Fb)
         {
-            byte bres = (byte)(Fa.value ^ Fb.value);
-            return new Field(bres);
+            if (Fa is null)
+            {
+                throw new ArgumentNullException(nameof(Fa));
+            }
+            if (Fb is null)
+            {
+                throw new ArgumentNullException(nameof(Fb));
+            }
+
+            byte bres = (byte)(Fa.Value ^ Fb.Value);
+            return new Field(bres); 
         }
 
         public static Field operator *(Field Fa, Field Fb)
         {
-            Field FRes = new Field(0);
-            if (Fa.value != 0 && Fb.value != 0)
+            if (Fa is null)
             {
-                byte bres = (byte)((Log[Fa.value] + Log[Fb.value]) % (order - 1));
+                throw new ArgumentNullException(nameof(Fa));
+            }
+            if (Fb is null)
+            {
+                throw new ArgumentNullException(nameof(Fb));
+            }
+
+            Field FRes = new Field(0);
+            if (Fa.Value != 0 && Fb.Value != 0)
+            {
+                byte bres = (byte)((Log[Fa.Value] + Log[Fb.Value]) % (order - 1));
                 bres = Exp[bres];
-                FRes.value = bres;
+                FRes.Value = bres;
             }
             return FRes;
         }
 
         public static Field operator /(Field Fa, Field Fb)
         {
-            if (Fb.value == 0)
+            if (Fa is null)
             {
-                throw new System.ArgumentException("Divisor cannot be 0", "Fb");
+                throw new ArgumentNullException(nameof(Fa));
+            }
+            if (Fb is null)
+            {
+                throw new ArgumentNullException(nameof(Fb));
+            }
+
+            if (Fb.Value == 0)
+            {
+                throw new ArgumentException("Divisor cannot be 0", nameof(Fb));
             }
 
             Field Fres = new Field(0);
-            if (Fa.value != 0)
+            if (Fa.Value != 0)
             {
-                byte bres = (byte)(((order - 1) + Log[Fa.value] - Log[Fb.value]) % (order - 1));
+                byte bres = (byte)(((order - 1) + Log[Fa.Value] - Log[Fb.Value]) % (order - 1));
                 bres = Exp[bres];
-                Fres.value = bres;
+                Fres.Value = bres;
             }
             return Fres;
         }
 
-        public static Field pow(Field f, byte exp)
+        public static Field Pow(Field f, byte exp)
         {
             Field fres = new Field(1);
             for (byte i = 0; i < exp; i++)
@@ -130,12 +157,22 @@ namespace GF256Computations
 
         public static bool operator ==(Field Fa, Field Fb)
         {
-            return (Fa.value == Fb.value);
+            if (Fa is null || Fb is null)
+            {
+                return false;
+            }
+
+            return Fa.Value == Fb.Value;
         }
 
         public static bool operator !=(Field Fa, Field Fb)
         {
-            return !(Fa.value == Fb.value);
+            if (Fa is null || Fb is null)
+            {
+                return true;
+            }
+
+            return !(Fa.Value == Fb.Value);
         }
 
         public override bool Equals(object obj)
@@ -146,23 +183,23 @@ namespace GF256Computations
             }
 
             Field F = obj as Field;
-            if ((System.Object)F == null)
+            if ((Object)F == null)
             {
                 return false;
             }
-            return (value == F.value);
+            return (Value == F.Value);
         }
 
 #pragma warning disable S2328 // "GetHashCode" should not reference mutable fields
         public override int GetHashCode()
 #pragma warning restore S2328 // "GetHashCode" should not reference mutable fields
         {
-            return value;
+            return Value;
         }
 
         public override string ToString()
         {
-            return value.ToString();
+            return Value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -192,6 +229,36 @@ namespace GF256Computations
                 bb >>= 1;
             }
             return result;
+        }
+
+        public static Field Multiply(Field left, Field right)
+        {
+            return left * right;
+        }
+
+        public static Field Divide(Field left, Field right)
+        {
+            return left / right;
+        }
+
+        public static Field Add(Field left, Field right)
+        {
+            return left + right;
+        }
+
+        public static Field Subtract(Field left, Field right)
+        {
+            return left - right;
+        }
+
+        public static Field ToField(byte byteToField)
+        {
+            return (Field)byteToField;
+        }
+
+        public static byte ToByte(Field fieldToByte)
+        {
+            return (byte)fieldToByte;
         }
     }
 }
