@@ -30,7 +30,7 @@ namespace TuviBytesShamirSecretSharingLibTests
             byte[] result = SecretSharing.SplitSecret(1, 5, secret);
             foreach(var share in result)
             {
-                Assert.AreEqual(secret, share);
+                Assert.That(share, Is.EqualTo(secret));
             }
         }
 
@@ -39,9 +39,14 @@ namespace TuviBytesShamirSecretSharingLibTests
         public void SecretRecoveryAsByteTuplesAllPossibilitiesTests(byte secret)
         {
             byte[] result = SecretSharing.SplitSecret(2, 3, secret);
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new (byte, byte)[] { (0, result[0]), (1, result[1]) }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new (byte, byte)[] { (0, result[0]), (2, result[2]) }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new (byte, byte)[] { (1, result[1]), (2, result[2]) }));
+
+            var recoverSecret1 = SecretSharing.RecoverSecret(new (byte, byte)[] { (0, result[0]), (1, result[1]) });
+            var recoverSecret2 = SecretSharing.RecoverSecret(new (byte, byte)[] { (0, result[0]), (2, result[2]) });
+            var recoverSecret3  = SecretSharing.RecoverSecret(new (byte, byte)[] { (1, result[1]), (2, result[2]) });
+
+            Assert.That(recoverSecret1, Is.EqualTo(secret));
+            Assert.That(recoverSecret2, Is.EqualTo(secret));
+            Assert.That(recoverSecret3, Is.EqualTo(secret));
         }
 
         [TestCase(119)]
@@ -54,16 +59,17 @@ namespace TuviBytesShamirSecretSharingLibTests
             Point point2 = new Point(2, result[2]);
             Point point3 = new Point(3, result[3]);
             Point point4 = new Point(4, result[4]);
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point1, point2 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point1, point3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point1, point4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point2, point3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point2, point4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point3, point4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point1, point2, point3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point1, point2, point4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point1, point3, point4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Point[] { point2, point3, point4 }));
+
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point1, point2 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point1, point3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point1, point4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point2, point3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point2, point4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point3, point4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point1, point2, point3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point1, point2, point4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point1, point3, point4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point2, point3, point4 }), Is.EqualTo(secret));
         }
 
         [TestCase(94)]
@@ -76,16 +82,16 @@ namespace TuviBytesShamirSecretSharingLibTests
             Point point2 = new Point(2, result[2]);
             Point point3 = new Point(3, result[3]);
             Point point4 = new Point(4, result[4]);
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point1 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point2 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point3 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point0, point4 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point1, point2 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point1, point3 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point1, point4 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point2, point3 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point2, point4 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Point[] { point3, point4 }));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point1 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point2 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point3 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point0, point4 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point1, point2 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point1, point3 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point1, point4 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point2, point3 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point2, point4 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Point[] { point3, point4 }), Is.Not.EqualTo(secret));
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesArraySecretRecovery))]
@@ -97,16 +103,16 @@ namespace TuviBytesShamirSecretSharingLibTests
             Share share2 = new Share(2, result[2].GetShareValue());
             Share share3 = new Share(3, result[3].GetShareValue());
             Share share4 = new Share(4, result[4].GetShareValue());
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2, share3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share3, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share2, share3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share2, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share3, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share2, share3, share4 }));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share2 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share2, share3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share2, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share3, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share2, share3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share2, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share3, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share2, share3, share4 }), Is.EqualTo(secret));
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesArraySecretRecovery))]
@@ -119,21 +125,21 @@ namespace TuviBytesShamirSecretSharingLibTests
             Share share3 = new Share(3, result[3].GetShareValue());
             Share share4 = new Share(4, result[4].GetShareValue());
             Share share5 = new Share(5, result[5].GetShareValue());
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share3 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share3, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share3, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1, share4, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2, share3, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2, share3, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2, share4, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share3, share4, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share2, share3, share4 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share2, share3, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share2, share4, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share3, share4, share5 }));
-            Assert.AreEqual(secret, SecretSharing.RecoverSecret(new Share[] { share2, share3, share4, share5 }));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share3 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share2, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share3, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share3, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1, share4, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share2, share3, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share2, share3, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share2, share4, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share3, share4, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share2, share3, share4 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share2, share3, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share2, share4, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share3, share4, share5 }), Is.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share2, share3, share4, share5 }), Is.EqualTo(secret));
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesArraySecretRecovery))]
@@ -145,16 +151,16 @@ namespace TuviBytesShamirSecretSharingLibTests
             Share share2 = new Share(2, result[2].GetShareValue());
             Share share3 = new Share(3, result[3].GetShareValue());
             Share share4 = new Share(4, result[4].GetShareValue());
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share1 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share2 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share3 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share0, share4 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share2 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share3 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share1, share4 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share2, share3 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share2, share4 }));
-            Assert.AreNotEqual(secret, SecretSharing.RecoverSecret(new Share[] { share3, share4 }));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share1 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share2 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share3 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share0, share4 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share2 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share3 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share1, share4 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share2, share3 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share2, share4 }), Is.Not.EqualTo(secret));
+            Assert.That(SecretSharing.RecoverSecret(new Share[] { share3, share4 }), Is.Not.EqualTo(secret));
         }
 
         [Test]

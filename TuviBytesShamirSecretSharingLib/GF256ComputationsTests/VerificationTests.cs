@@ -27,7 +27,7 @@ namespace GF256ComputationsTests
         {
             Field field = new Field(197);
             byte b = Field.ToByte(field);
-            Assert.AreEqual((byte)field, b);
+            Assert.That(b, Is.EqualTo((byte)field));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace GF256ComputationsTests
         public void TransformationToFieldTest()
         {
             Field f = Field.ToField(5);
-            Assert.AreEqual((Field)5, f);
+            Assert.That(f, Is.EqualTo((Field)5));
         }
 
         [Test]
