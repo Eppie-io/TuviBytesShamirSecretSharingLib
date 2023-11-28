@@ -27,7 +27,7 @@ namespace TuviBytesShamirSecretSharingLibTests
         public void InterpolateFromPointsCorrectWorkTests(byte x, Point[] points, byte expectedResult)
         {
             var result = Interpolation.Interpolate(new Field(x), points);
-            Assert.AreEqual(expectedResult, result.Value);
+            Assert.That(result.Value, Is.EqualTo(expectedResult));
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForBytesInterpolation))]
@@ -49,7 +49,7 @@ namespace TuviBytesShamirSecretSharingLibTests
             }
 
             var result = Interpolation.Interpolate(x, points);
-            Assert.AreEqual(expectedResult, result.Value);
+            Assert.That(result.Value, Is.EqualTo(expectedResult));
         }
 
         [Test]

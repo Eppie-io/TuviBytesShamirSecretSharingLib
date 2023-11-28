@@ -28,7 +28,7 @@ namespace GF256ComputationsTests
         public void ConstructorTest()
         {
             Field field = new Field();
-            Assert.AreEqual(0, field.Value);
+            Assert.That(field.Value, Is.Zero);
         }
 
         [TestCase(1, 2, 3)]
@@ -41,7 +41,7 @@ namespace GF256ComputationsTests
             Field addendum2 = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = addendum1 + addendum2;
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(1, 2, 3)]
@@ -54,7 +54,7 @@ namespace GF256ComputationsTests
             Field addendum2 = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = Field.Add(addendum1, addendum2);
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(2, 1, 3)]
@@ -67,7 +67,7 @@ namespace GF256ComputationsTests
             Field subtrahend = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = minuend - subtrahend;
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(2, 1, 3)]
@@ -80,7 +80,7 @@ namespace GF256ComputationsTests
             Field subtrahend = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = Field.Subtract(minuend, subtrahend);
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(2, 1, 2)]
@@ -98,7 +98,7 @@ namespace GF256ComputationsTests
             Field factor2 = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = factor1 * factor2;
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(2, 1, 2)]
@@ -115,8 +115,8 @@ namespace GF256ComputationsTests
             Field factor1 = new Field(a);
             Field factor2 = new Field(b);
             Field expectedResult = new Field(result);
-            var actualResult =Field.Multiply(factor1, factor2);
-            Assert.AreEqual(expectedResult, actualResult);
+            var actualResult = Field.Multiply(factor1, factor2);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(155, 131, 181)]
@@ -130,7 +130,7 @@ namespace GF256ComputationsTests
             Field divider = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = dividend / divider;
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(155, 131, 181)]
@@ -144,7 +144,7 @@ namespace GF256ComputationsTests
             Field divider = new Field(b);
             Field expectedResult = new Field(result);
             var actualResult = Field.Divide(dividend, divider);
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(208, 74)]
@@ -156,7 +156,7 @@ namespace GF256ComputationsTests
             Field initialNumber = new Field(a);
             Field anyNumber = new Field(b);
             var actualResult = initialNumber * anyNumber / anyNumber;
-            Assert.AreEqual(initialNumber, actualResult);
+            Assert.That(actualResult, Is.EqualTo(initialNumber));
         }
 
         [TestCase(2, 3, 8)]
@@ -168,7 +168,7 @@ namespace GF256ComputationsTests
             Field basis = new Field(a);
             Field expectedResult = new Field(result);
             var actualResult = Field.Pow(basis, degree);
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCase(2, 3, false)]
@@ -182,14 +182,14 @@ namespace GF256ComputationsTests
             Field left = new Field(a);
             Field right = new Field(b);
             var actualResult = left.Equals(right);
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [TestCaseSource(typeof(TestCasesDataSource), nameof(TestCasesDataSource.TestCasesForEquality))]
         public void EqualsOperatorTests(Field left, Field right, bool expectedResult)
         {
-            Assert.AreEqual(expectedResult, left == right);
-            Assert.AreEqual(!expectedResult, left != right);
+            Assert.That(left == right, Is.EqualTo(expectedResult));
+            Assert.That(left != right, Is.Not.EqualTo(expectedResult));
         }
 
         [TestCase(134)]
@@ -200,7 +200,7 @@ namespace GF256ComputationsTests
         {
             Field field = new Field((byte)value);
             int result = field.GetHashCode();
-            Assert.AreEqual(value, result);
+            Assert.That(result, Is.EqualTo(value));
         }
 
         [Test]
@@ -208,10 +208,11 @@ namespace GF256ComputationsTests
         {
             Field field = new Field(15);
             var result = field.ToString();
-            Assert.AreEqual("15", result);
+            Assert.That(result, Is.EqualTo("15"));
+
             field = new Field(234);
             result = field.ToString();
-            Assert.AreEqual("234", result);
+            Assert.That(result, Is.EqualTo("234"));
         }
 
         [TestCase(189, 0)]
