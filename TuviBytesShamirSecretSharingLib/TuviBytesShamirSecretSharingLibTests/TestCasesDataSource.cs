@@ -63,6 +63,23 @@ namespace TuviBytesShamirSecretSharingLibTests
             }
         }
 
+        public static IEnumerable<TestCaseData> TestCasesForSecretSplitting
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    (byte)1, (byte)29, System.Array.Empty<byte>(), new byte[] { 29, 29, 29, 29, 29 });
+                yield return new TestCaseData(
+                    (byte)2, (byte)29, new byte[] { 7 }, new byte[] { 7, 4, 1, 2, 11 });
+                yield return new TestCaseData(
+                    (byte)3, (byte)241, new byte[] { 7, 4 }, new byte[] { 7, 4, 7, 4, 31 });
+                yield return new TestCaseData(
+                    (byte)3, (byte)29, new byte[] { 7, 4 }, new byte[] { 7, 4, 1, 2, 11 });
+                yield return new TestCaseData(
+                    (byte)3, (byte)29, new byte[] { 29, 29 }, new byte[] { 29, 29, 29, 29, 29 });
+            }
+        }
+
         public static IEnumerable<byte[]> TestCasesForBytesArraySecretRecovery
         {
             get
